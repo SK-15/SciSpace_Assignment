@@ -16,7 +16,7 @@ def main(api_key):
     Your task is to answer the question by only using the context to answer the question. 
     There are three contexts in total. 
     Each context consists of two part one is text another is author of the context. 
-    Use text to answer the question and mention author name after using the text. 
+    Use all the text in the context to answer the question and mention author name after using the text. 
     Whenever you mention author name mention it as (Author et al) where Author is author's name followed by 'et al'.
     Question: What is the difference between GPT and BERT models?
     Context 1 author: Trinita Roy
@@ -43,5 +43,4 @@ if __name__ == '__main__':
      print('\n\n')
      print('Response:\n')
      print(comp.choices[0].message.content)
-    
     
