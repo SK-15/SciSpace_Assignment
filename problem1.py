@@ -30,12 +30,16 @@ if __name__ == '__main__':
 
         Get Abstract:
         
-        Implement a feature that allows users to ask the assistant to retrieve the abstract of a given research paper.
-        Paraphrasing Functionality:
+        When a user asks for an abstract of the research papaer respond with a summary of the reaearch paper.
         
+        Paraphrasing Functionality:
+            
+        When the user asks for Paraphrasing the abstract then, return the paraphrased content of abstract as a Python list, 
+        where each element of the list represents a sentence in the paraphrased paragraph.
         Develop a paraphrasing capability for the assistant based on the following user input:
-        a. Tone: Academic / Creative / Aggressive
-        b. Output Length: 1x (same length) / 2x (twice the length) / 3x (thrice the length)
+        a. Tone: Academic / Creative / Aggressive (Make the tone of the paraphrased response according to user input)
+        b. Output Length: 1x (same length of asbtract) / 2x (twice the length of abstarct) / 3x (thrice the length of abstract)
+        
       """,
       model="gpt-3.5-turbo-1106",
       tools=[{"type": "retrieval"}],
@@ -85,17 +89,27 @@ if __name__ == '__main__':
     message = client.beta.threads.messages.create(
       thread_id=thread.id,
       role="user",
-      content=f"Now paraphrase the abstract with {tone} tone and {length} length",
-    )
+      content=f"Return Python list of paraphrased content of the abstract with {tone} tone and {length} length of abstract.",
+      )
     
     run = client.beta.threads.runs.create(
       thread_id=thread.id,
       assistant_id=assistant.id,
+      instructions="""Response should in the form of Python(Programming Language) list.
+      Increase the length of paraphrased content number of times user asked.
+      Each sentence of the paraphrased paragraph should be an element of the list.
+      Each element of the list should be sentence of atmost ten words.
+      List should contain more than two elements.
+      Response should only conatain the list.
+      Example:
+      Abstract - Hi I am Saurav. I am a Data Scientist. I work for Agastya Data Solutions.
+      Response - ["My name is Saurav", "I am professionally a Data Scientist", "Agastya Data Solutions is the company I work at."]
+      """
     )
     
     run = client.beta.threads.runs.retrieve(
       thread_id=thread.id,
-      run_id=run.id
+      run_id=run.id,
     )
     
     while run.status == 'in_progress':
@@ -112,13 +126,13 @@ if __name__ == '__main__':
       thread_id=thread.id
     )
     
-    sentences.append(messages2.data[0].content[0].text.value)
+    # sentences.append(messages2.data[0].content[0].text.value)
     print('Paraphrased response created by assistant:\n')
     print(messages2.data[0].content[0].text.value)
     print('\n\n')
     
-    json_data = json.dumps(sentences, indent=2)  
+    # json_data = json.dumps(sentences, indent=2)  
     
     # Save the JSON data to a file
-    with open('gpt_output.json', 'w') as json_file:
-        json_file.write(json_data)
+    # with open('gpt_output.json', 'w') as json_file:
+    #     json_file.write(json_data)
